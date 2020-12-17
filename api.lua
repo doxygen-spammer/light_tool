@@ -7,9 +7,12 @@ light_tool.tools = {}
 light_tool.range = {}
 light_tool.lightable_nodes = {}
 light_tool.lit_nodes = {}
-light_tool.light_beam = function(pos, dir, range)
+light_tool.light_beam = function(pos, dir, range, user)
 	-- Normalize dir to have longest component == 1.
 	local normalized_dir = vector.divide(dir, math.max(math.abs(dir.x), math.abs(dir.y), math.abs(dir.z), 0.01))
+
+	-- Remember where light sources are placed, to send affected map block to player later:
+	local light_positions = {}
 
 	for i = 0, math.floor(range / vector.length(normalized_dir)) do
 		local new_pos = vector.add(pos, vector.multiply(normalized_dir, i))
@@ -18,17 +21,86 @@ light_tool.light_beam = function(pos, dir, range)
 		local lightable = light_tool.check(light_tool.lightable_nodes, node.name)
 		local lightable_index = light_tool.check_index(light_tool.lightable_nodes, node.name)
 		local lit = light_tool.check(light_tool.lit_nodes, node.name)
+
         if node.name == "air" or node.name == "light_tool:light" then
-	        minetest.set_node(new_pos, {name = "light_tool:light"})
+			-- Place temporary light nodes in air:
+			minetest.set_node(new_pos, {name = "light_tool:light"})
+			light_positions[i] = new_pos
         elseif lightable or node.name == lit then
-	        
-	        local index = light_tool.check_index(light_tool.lightable_nodes, node.name)
-	        minetest.set_node(new_pos, {name = light_tool.lightable_nodes[index].."_glowing"})
-	        
+			-- Place temporary light nodes in registered glow nodes:
+			local index = light_tool.check_index(light_tool.lightable_nodes, node.name)
+			minetest.set_node(new_pos, {name = light_tool.lightable_nodes[index].."_glowing"})
+			light_positions[i] = new_pos
         elseif node.name and minetest.registered_nodes[node.name].sunlight_propagates == false and not lightable and not lit then
+			-- Hit an obstacle, beam ends heare.
 			break
 		end
-     end
+
+		-- For better performance, only last 6 light sources cause map block updates directly to the player:
+		light_positions[i - 6] = nil
+	end
+
+	-- Send affected map blocks to player. (Necessary for distances > 48 nodes.)
+	light_tool.send_blocks_for_lights(pos, light_positions, light_tool.light_brightness)
+
+	-- When light sources have been deleted, these map blocks must be sent again to player.
+	minetest.after(0.5, function()
+		light_tool.send_blocks_for_lights(pos, light_positions, light_tool.light_brightness)
+	end)
+end
+
+-- Computes which blocks are affected by light sources of specified brightness,
+-- and sends them to all players near `player_position`.
+function light_tool.send_blocks_for_lights(player_position, light_positions, brightness)
+	local affected_blocks = {}
+
+	for _, np in pairs(light_positions) do
+		local node_pos = vector.floor(np)
+		local block_pos = vector.floor(vector.divide(node_pos, 16))
+
+		-- Center block is always affected.
+		affected_blocks[block_pos] = true
+
+		-- For the 26 surrounding map blocks, check whether they are affected by lighting:
+		for x_offset = -1, 1 do
+			for y_offset = -1, 1 do
+				for z_offset = -1, 1 do
+					-- Calculate the manhattan length between light source and block center,
+					-- and subtract the manhattan distance from block center to closest face/edge/corner.
+					local block_to_check = vector.add(block_pos, vector.new(x_offset, y_offset, z_offset))
+					local block_center = vector.add(vector.multiply(block_to_check, 16), vector.new(7.5, 7.5, 7.5))
+					local distance_to_block_center = math.abs(node_pos.x - block_center.x) +
+							math.abs(node_pos.y - block_center.y) +
+							math.abs(node_pos.z - block_center.z)
+					local block_center_to_outside = (math.abs(x_offset) + math.abs(y_offset) + math.abs(z_offset)) * 8
+					local distance_to_block_outside = distance_to_block_center - block_center_to_outside
+
+					-- If this manhattan distance is less than the light level, that block is affected.
+					if distance_to_block_outside <= brightness then
+						affected_blocks[block_to_check] = true
+					end
+				end
+			end
+		end
+	end
+
+	-- Search players standing near beam origin.
+	-- Players standing elsewhere will not get these lighting updates,
+	-- they will only see those parts of the beam which are close to them.
+	local players = {}
+	local objects = minetest.get_objects_inside_radius(player_position, 16)
+	for _, object in pairs(objects) do
+		if object:get_player_name() then
+			table.insert(players, object)
+		end
+	end
+
+	-- Send blocks to players
+	for block_pos, _ in pairs(affected_blocks) do
+		for _, player in pairs(players) do
+			player:send_mapblock(block_pos)
+		end
+	end
 end
 
 light_tool.add_tool = function(toolname, range)

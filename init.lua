@@ -2,24 +2,26 @@ local name = minetest.get_current_modname()
 local path = minetest.get_modpath(name)
 
 dofile(path.."/api.lua")
+dofile(path.."/light.lua")
 
 minetest.register_tool("light_tool:light_tool", {
 	description = "Light Tool",
 	inventory_image = "light_tool_light_tool.png",
 })
-light_tool.add_tool("light_tool:light_tool", 20)
+light_tool.add_tool("light_tool:light_tool", 200)
 
+light_tool.light_brightness = 8
 minetest.register_node("light_tool:light", {
 	drawtype = "airlike",
 	tiles = {"blank.png"},
 	paramtype = "light",
 	walkable = false,
 	sunlight_propagates = true,
-	light_source = 8,
+	light_source = light_tool.light_brightness,
 	pointable = false,
 	buildable_to = true, 
 	on_construct = function(pos)
-		minetest.after(0.1, function()
+		minetest.after(0.2, function()
 			minetest.set_node(pos, {name = "air"})
 		end)
 	end,
@@ -70,7 +72,7 @@ minetest.register_globalstep(function()
 			local index = light_tool.check_index(light_tool.tools, wielded.name)
 			local dir = user:get_look_dir()
 			local pos = user:get_pos()
-			light_tool.light_beam({x = pos.x, y = pos.y+1, z = pos.z}, dir, light_tool.range[index])
+			light_tool.light_beam({x = pos.x, y = pos.y+1, z = pos.z}, dir, light_tool.range[index], user)
 		end
 	end
 end)
