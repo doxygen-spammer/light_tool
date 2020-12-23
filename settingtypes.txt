@@ -1,0 +1,9 @@
+# Which flashlights are available:
+# -1 Use original flashlight (20m)
+# 0 No flashlight items, only API.
+# 1 Copper (20m)
+# 2 Iron (40m)
+# 3 Gold (70m)
+# 4 Mese (110m)
+# 5 Diamond (160m)
+light_tool_max_tier (Max Flashlight Tier) int -1 -1 5
