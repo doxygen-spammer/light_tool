@@ -51,7 +51,7 @@ if make_default_recipes then
 	if tier >= 1 then
 		minetest.register_craftitem("light_tool:reflector_bronze_tin", {
 			description = "Bronce Disc with Tin\nA concave bronze disc with some tin applied.",
-			inventory_image = "light_tool_reflector_bronze_tin"
+			inventory_image = "light_tool_reflector_bronze_tin.png"
 		})
 
 		minetest.register_craft({
@@ -64,7 +64,7 @@ if make_default_recipes then
 
 		minetest.register_craftitem("light_tool:reflector_tin", {
 			description = "Primitive Reflector\nA concave bronze disc coated with a glossy layer of tin.",
-			inventory_image = "light_tool_reflector_tin"
+			inventory_image = "light_tool_reflector_tin.png"
 		})
 	
 		minetest.register_craft({
@@ -117,18 +117,18 @@ if make_default_recipes then
 	if tier >= 3 then
 		minetest.register_craftitem("light_tool:reflector_tin_gold", {
 			description = "Reflector with Gold\nA tin reflector with some gold.",
-			inventory_image = "light_tool_reflector_tin_gold"
+			inventory_image = "light_tool_reflector_tin_gold.png"
 		})
 
 		minetest.register_craft({
 			type = "shapeless",
 			output = "light_tool:reflector_tin_gold",
-			recipe = {"light_tool:reflector_tin", "default:gold_ingot 3"} -- TODO works?
+			recipe = {"light_tool:reflector_tin", "default:gold_ingot", "default:gold_ingot", "default:gold_ingot"}
 		})
 
 		minetest.register_craftitem("light_tool:reflector_gold", {
 			description = "Parabolic Mirror\nA concave disc, coated with a highly reflective gold layer.",
-			inventory_image = "light_tool_reflector_gold"
+			inventory_image = "light_tool_reflector_gold.png"
 		})
 	
 		minetest.register_craft({
@@ -172,7 +172,7 @@ if make_default_recipes then
 			recipe = {
 				{"default:glass", "default:glass", "default:glass"},
 				{"default:mese_post_light", "light_tool:reflector_gold", "default:mese_post_light"},
-				{"default:ingot_ingot", "light_tool:flashlight_gold", "default:ingot_ingot"}
+				{"default:steel_ingot", "light_tool:flashlight_gold", "default:steel_ingot"}
 			}
 		})
 		light_tool.add_tool("light_tool:flashlight_mese", math.min(max_range, 110))
@@ -191,32 +191,32 @@ if make_default_recipes then
 		minetest.register_craft({
 			output = "light_tool:flashlight_diamond",
 			recipe = {
-				{"default:mese_post_light", "default:glass", "default:mese_post_light"},
-				{"default:ingot_iron", "default:diamond", "default:ingot_iron"},
+				{"default:steel_ingot", "default:glass", "default:steel_ingot"},
+				{"default:mese_post_light", "default:diamond", "default:mese_post_light"},
 				{"light_tool:flashlight_mese", "default:diamond", "light_tool:flashlight_mese"}
 			}
 		})
 		light_tool.add_tool("light_tool:flashlight_diamond", math.min(max_range, 160))
 	end
 
-elseif make_mcl_recipes then -- TODO Test these recipes in MineClone.
+elseif make_mcl_recipes then
 	if tier >= 2 then
 		minetest.register_craftitem("light_tool:reflector_clay_iron", {
 			description = "Clay Bowl with Iron\nA concave clay disc with some iron applied.",
-			inventory_image = "light_tool_reflector_bronze_tin"
+			inventory_image = "light_tool_reflector_bronze_tin.png"
 		})
 
 		minetest.register_craft({
 			output = "light_tool:reflector_clay_iron",
 			recipe = {
-				{"mcl:brick", "mcl:iron_ingot", "mcl:brick"},
-				{"", "mcl:brick", ""}
+				{"mcl_core:brick", "mcl_core:iron_ingot", "mcl_core:brick"},
+				{"", "mcl_core:brick", ""}
 			}
 		})
 
 		minetest.register_craftitem("light_tool:reflector_iron", {
 			description = "Primitive Reflector\nA concave clay disc coated with a glossy layer of iron.",
-			inventory_image = "light_tool_reflector_tin"
+			inventory_image = "light_tool_reflector_tin.png"
 		})
 	
 		minetest.register_craft({
@@ -238,9 +238,9 @@ elseif make_mcl_recipes then -- TODO Test these recipes in MineClone.
 		minetest.register_craft({
 			output = "light_tool:flashlight_iron",
 			recipe = {
-				{"mcl:glass", "mcl:glass", "mcl:glass"},
-				{"mcl:iron_ingot", "group:torch", "mcl:iron_ingot"},
-				{"mcl:ingot_ingot", "light_tool:reflector_iron", "mcl:ingot_ingot"}
+				{"mcl_core:glass", "mcl_core:glass", "mcl_core:glass"},
+				{"mcl_core:iron_ingot", "group:torch", "mcl_core:iron_ingot"},
+				{"mcl_core:iron_ingot", "light_tool:reflector_iron", "mcl_core:iron_ingot"}
 			}
 		})
 		light_tool.add_tool("light_tool:flashlight_iron", math.min(max_range, 30))
@@ -249,18 +249,18 @@ elseif make_mcl_recipes then -- TODO Test these recipes in MineClone.
 	if tier >= 3 then
 		minetest.register_craftitem("light_tool:reflector_iron_gold", {
 			description = "Reflector with Gold\nAn iron reflector with some gold.",
-			inventory_image = "light_tool_reflector_tin_gold"
+			inventory_image = "light_tool_reflector_tin_gold.png"
 		})
 
 		minetest.register_craft({
 			type = "shapeless",
 			output = "light_tool:reflector_iron_gold",
-			recipe = {"light_tool:reflector_iron", "mcl:gold_ingot 3"} -- TODO works?
+			recipe = {"light_tool:reflector_iron", "mcl_core:gold_ingot", "mcl_core:gold_ingot", "mcl_core:gold_ingot"}
 		})
 
 		minetest.register_craftitem("light_tool:reflector_gold", {
 			description = "Parabolic Mirror\nA concave disc, coated with a highly reflective gold layer.",
-			inventory_image = "light_tool_reflector_gold"
+			inventory_image = "light_tool_reflector_gold.png"
 		})
 	
 		minetest.register_craft({
@@ -282,8 +282,8 @@ elseif make_mcl_recipes then -- TODO Test these recipes in MineClone.
 		minetest.register_craft({
 			output = "light_tool:flashlight_gold",
 			recipe = {
-				{"mcl:gold_ingot", "light_tool:flashlight_iron", "mcl:gold_ingot"},
-				{"mcl:iron_ingot", "light_tool:reflector_gold", "mcl:iron_ingot"}
+				{"mcl_core:gold_ingot", "light_tool:flashlight_iron", "mcl_core:gold_ingot"},
+				{"mcl_core:iron_ingot", "light_tool:reflector_gold", "mcl_core:iron_ingot"}
 			}
 		})
 		light_tool.add_tool("light_tool:flashlight_gold", math.min(max_range, 70))
@@ -302,9 +302,9 @@ elseif make_mcl_recipes then -- TODO Test these recipes in MineClone.
 		minetest.register_craft({
 			output = "light_tool:flashlight_diamond",
 			recipe = {
-				{"mcl:glass", "mcl:glass", "mcl:glass"},
-				{"mcl:ingot_iron", "diamond:diamond", "mcl:ingot_iron"},
-				{"light_tool:flashlight_gold", "diamond:diamond", "light_tool:flashlight_gold"}
+				{"mcl_core:glass", "mcl_core:glass", "mcl_core:glass"},
+				{"mcl_core:iron_ingot", "mcl_core:diamond", "mcl_core:iron_ingot"},
+				{"light_tool:flashlight_gold", "mcl_core:diamond", "light_tool:flashlight_gold"}
 			}
 		})
 		light_tool.add_tool("light_tool:flashlight_diamond", math.min(max_range, 160))
