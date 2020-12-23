@@ -49,36 +49,37 @@ end
 -- Not all tiers are available in MineClone, but they are less useful there because of the height limit.
 if make_default_recipes then
 	if tier >= 1 then
-		minetest.register_craftitem("light_tool:reflector_bronce_tin", {
-			short_description = "Bronce Disc with Tin",
-			description = "A concave bronce disc with some tin applied.",
-			inventory_image = "light_tool_reflector_bronce_tin"
+		minetest.register_craftitem("light_tool:reflector_bronze_tin", {
+			description = "Bronce Disc with Tin\nA concave bronze disc with some tin applied.",
+			inventory_image = "light_tool_reflector_bronze_tin"
 		})
 
 		minetest.register_craft({
-			output = "light_tool:reflector_bronce_tin",
+			output = "light_tool:reflector_bronze_tin",
 			recipe = {
-				{"default:bronce_ingot", "default:tin_ingot", "default:bronce_ingot"},
-				{"", "default:bronce_ingot", ""}
+				{"default:bronze_ingot", "default:tin_ingot", "default:bronze_ingot"},
+				{"", "default:bronze_ingot", ""}
 			}
 		})
 
 		minetest.register_craftitem("light_tool:reflector_tin", {
-			short_description = "Primitive Reflector",
-			description = "A concave bronce disc coated with a glossy layer of tin.",
+			description = "Primitive Reflector\nA concave bronze disc coated with a glossy layer of tin.",
 			inventory_image = "light_tool_reflector_tin"
 		})
 	
 		minetest.register_craft({
 			type = "cooking",
 			output = "light_tool:reflector_tin",
-			recipe = "light_tool:reflector_bronce_tin",
+			recipe = "light_tool:reflector_bronze_tin",
 			cooktime = 10
 		})
 
+		local limit_string = ""
+		if max_range < 20 then
+			limit_string = max_range_limiting_string
+		end
 		minetest.register_tool("light_tool:flashlight_copper", {
-			short_description = "Mini Flashlight",
-			description = "Bundles the light of a light source to a 20m long beam.",
+			description = "Mini Flashlight\nBundles the light of a light source to a 20m long beam." .. limit_string,
 			inventory_image = "light_tool_flashlight_copper.png",
 		})
 	
@@ -87,10 +88,10 @@ if make_default_recipes then
 			recipe = {
 				{"default:glass", "default:glass", "default:glass"},
 				{"group:coal", "group:torch", "group:coal"},
-				{"default:bronce_ingot", "light_tool:reflector_tin", "default:bronce_ingot"}
+				{"default:bronze_ingot", "light_tool:reflector_tin", "default:bronze_ingot"}
 			}
 		})
-		light_tool.add_tool("light_tool:flashlight_copper", 20)
+		light_tool.add_tool("light_tool:flashlight_copper", math.min(max_range, 20))
 	end
 
 	if tier >= 2 then
@@ -99,16 +100,15 @@ if make_default_recipes then
 			limit_string = max_range_limiting_string
 		end
 		minetest.register_tool("light_tool:flashlight_iron", {
-			short_description = "Midi Flashlight",
-			description = "Burns wood gas to make enough light for a 40m long beam." .. limit_string,
-			inventory_image = "light_tool_flashlight_copper.png",
+			description = "Midi Flashlight\nBurns wood gas to make enough light for a 40m long beam." .. limit_string,
+			inventory_image = "light_tool_flashlight_iron.png",
 		})
 
 		minetest.register_craft({
 			output = "light_tool:flashlight_iron",
 			recipe = {
-				{"group:wood", "default:iron_ingot", "group:wood"},
-				{"default:ingot_ingot", "light_tool:flashlight_copper", "default:ingot_ingot"}
+				{"group:wood", "default:steel_ingot", "group:wood"},
+				{"default:steel_ingot", "light_tool:flashlight_copper", "default:steel_ingot"}
 			}
 		})
 		light_tool.add_tool("light_tool:flashlight_iron", math.min(max_range, 40))
@@ -116,8 +116,7 @@ if make_default_recipes then
 
 	if tier >= 3 then
 		minetest.register_craftitem("light_tool:reflector_tin_gold", {
-			short_description = "Reflector with Gold",
-			description = "A tin reflector with some gold.",
+			description = "Reflector with Gold\nA tin reflector with some gold.",
 			inventory_image = "light_tool_reflector_tin_gold"
 		})
 
@@ -128,8 +127,7 @@ if make_default_recipes then
 		})
 
 		minetest.register_craftitem("light_tool:reflector_gold", {
-			short_description = "Parabolic Mirror",
-			description = "A concave disc, coated with a highly reflective gold layer.",
+			description = "Parabolic Mirror\nA concave disc, coated with a highly reflective gold layer.",
 			inventory_image = "light_tool_reflector_gold"
 		})
 	
@@ -145,8 +143,7 @@ if make_default_recipes then
 			limit_string = max_range_limiting_string
 		end
 		minetest.register_tool("light_tool:flashlight_gold", {
-			short_description = "Maxi Flashlight",
-			description = "Uses advanced optics to form a 70m long beam." .. limit_string,
+			description = "Maxi Flashlight\nUses advanced optics to form a 70m long beam." .. limit_string,
 			inventory_image = "light_tool_flashlight_gold.png",
 		})
 
@@ -154,7 +151,7 @@ if make_default_recipes then
 			output = "light_tool:flashlight_gold",
 			recipe = {
 				{"default:gold_ingot", "light_tool:flashlight_iron", "default:gold_ingot"},
-				{"default:iron_ingot", "light_tool:reflector_gold", "default:iron_ingot"}
+				{"default:steel_ingot", "light_tool:reflector_gold", "default:steel_ingot"}
 			}
 		})
 		light_tool.add_tool("light_tool:flashlight_gold", math.min(max_range, 70))
@@ -166,8 +163,7 @@ if make_default_recipes then
 			limit_string = max_range_limiting_string
 		end
 		minetest.register_tool("light_tool:flashlight_mese", {
-			short_description = "Super Flashlight",
-			description = "Collimates the light of an advanced light source to an 110m long beam." .. limit_string,
+			description = "Super Flashlight\nCollimates the light of an advanced light source to an 110m long beam." .. limit_string,
 			inventory_image = "light_tool_flashlight_mese.png",
 		})
 
@@ -188,8 +184,7 @@ if make_default_recipes then
 			limit_string = max_range_limiting_string
 		end
 		minetest.register_tool("light_tool:flashlight_diamond", {
-			short_description = "Ultra Flashlight",
-			description = "Emits an 160m long beam of light. Useful for finding the light switch in your basement." .. limit_string,
+			description = "Ultra Flashlight\nEmits an 160m long beam of light. Useful for finding the light switch in your basement." .. limit_string,
 			inventory_image = "light_tool_flashlight_diamond.png",
 		})
 
@@ -207,9 +202,8 @@ if make_default_recipes then
 elseif make_mcl_recipes then -- TODO Test these recipes in MineClone.
 	if tier >= 2 then
 		minetest.register_craftitem("light_tool:reflector_clay_iron", {
-			short_description = "Clay Bowl with Iron",
-			description = "A concave clay disc with some iron applied.",
-			inventory_image = "light_tool_reflector_bronce_tin"
+			description = "Clay Bowl with Iron\nA concave clay disc with some iron applied.",
+			inventory_image = "light_tool_reflector_bronze_tin"
 		})
 
 		minetest.register_craft({
@@ -221,8 +215,7 @@ elseif make_mcl_recipes then -- TODO Test these recipes in MineClone.
 		})
 
 		minetest.register_craftitem("light_tool:reflector_iron", {
-			short_description = "Primitive Reflector",
-			description = "A concave clay disc coated with a glossy layer of iron.",
+			description = "Primitive Reflector\nA concave clay disc coated with a glossy layer of iron.",
 			inventory_image = "light_tool_reflector_tin"
 		})
 	
@@ -238,8 +231,7 @@ elseif make_mcl_recipes then -- TODO Test these recipes in MineClone.
 			limit_string = max_range_limiting_string
 		end
 		minetest.register_tool("light_tool:flashlight_iron", {
-			short_description = "Mini Flashlight",
-			description = "Bundles the light of a light source to a 30m long beam." .. limit_string,
+			description = "Mini Flashlight\nBundles the light of a light source to a 30m long beam." .. limit_string,
 			inventory_image = "light_tool_flashlight_iron.png",
 		})
 
@@ -256,8 +248,7 @@ elseif make_mcl_recipes then -- TODO Test these recipes in MineClone.
 
 	if tier >= 3 then
 		minetest.register_craftitem("light_tool:reflector_iron_gold", {
-			short_description = "Reflector with Gold",
-			description = "An iron reflector with some gold.",
+			description = "Reflector with Gold\nAn iron reflector with some gold.",
 			inventory_image = "light_tool_reflector_tin_gold"
 		})
 
@@ -268,8 +259,7 @@ elseif make_mcl_recipes then -- TODO Test these recipes in MineClone.
 		})
 
 		minetest.register_craftitem("light_tool:reflector_gold", {
-			short_description = "Parabolic Mirror",
-			description = "A concave disc, coated with a highly reflective gold layer.",
+			description = "Parabolic Mirror\nA concave disc, coated with a highly reflective gold layer.",
 			inventory_image = "light_tool_reflector_gold"
 		})
 	
@@ -285,8 +275,7 @@ elseif make_mcl_recipes then -- TODO Test these recipes in MineClone.
 			limit_string = max_range_limiting_string
 		end
 		minetest.register_tool("light_tool:flashlight_gold", {
-			short_description = "Midi Flashlight",
-			description = "Uses advanced optics to form a 70m long beam." .. limit_string,
+			description = "Midi Flashlight\nUses advanced optics to form a 70m long beam." .. limit_string,
 			inventory_image = "light_tool_flashlight_gold.png",
 		})
 
@@ -306,8 +295,7 @@ elseif make_mcl_recipes then -- TODO Test these recipes in MineClone.
 			limit_string = max_range_limiting_string
 		end
 		minetest.register_tool("light_tool:flashlight_diamond", {
-			short_description = "Maxi Flashlight",
-			description = "Emits an 160m long beam of light. Useful for finding the light switch in your basement." .. limit_string,
+			description = "Maxi Flashlight\nEmits an 160m long beam of light. Useful for finding the light switch in your basement." .. limit_string,
 			inventory_image = "light_tool_flashlight_diamond.png",
 		})
 
