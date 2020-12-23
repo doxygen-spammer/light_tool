@@ -1,11 +1,11 @@
 -- Which tools to create
-local tier = minetest.settings.get("light_tool_max_tier") or -1
+local tier = tonumber(minetest.settings:get("light_tool_max_tier")) or -1
 local make_default_recipes = minetest.get_modpath("default")
 local make_mcl_recipes = minetest.get_modpath("mcl_core")
 
 -- Range limit for the tools
-local setting_active_block_range = minetest.settings.get("active_block_range") or 100
-local setting_max_block_send_distance = minetest.settings.get("max_block_send_distance") or 100
+local setting_active_block_range = tonumber(minetest.settings:get("active_block_range")) or 100
+local setting_max_block_send_distance = tonumber(minetest.settings:get("max_block_send_distance")) or 100
 
 local max_range = setting_active_block_range * 16 - 16
 local max_range_limiting_string = "\n[Distance limited by active_block_range setting.]"
@@ -74,12 +74,11 @@ if make_default_recipes then
 			output = "light_tool:reflector_tin",
 			recipe = "light_tool:reflector_bronce_tin",
 			cooktime = 10
-			}
 		})
 
 		minetest.register_tool("light_tool:flashlight_copper", {
 			short_description = "Mini Flashlight",
-			description = "Bundles the light of a light source to a 20m long beam."
+			description = "Bundles the light of a light source to a 20m long beam.",
 			inventory_image = "light_tool_flashlight_copper.png",
 		})
 	
@@ -101,7 +100,7 @@ if make_default_recipes then
 		end
 		minetest.register_tool("light_tool:flashlight_iron", {
 			short_description = "Midi Flashlight",
-			description = "Burns wood gas to make enough light for a 40m long beam." .. limit_string
+			description = "Burns wood gas to make enough light for a 40m long beam." .. limit_string,
 			inventory_image = "light_tool_flashlight_copper.png",
 		})
 
@@ -139,7 +138,6 @@ if make_default_recipes then
 			output = "light_tool:reflector_gold",
 			recipe = "light_tool:reflector_tin_gold",
 			cooktime = 10
-			}
 		})
 
 		local limit_string = ""
@@ -148,7 +146,7 @@ if make_default_recipes then
 		end
 		minetest.register_tool("light_tool:flashlight_gold", {
 			short_description = "Maxi Flashlight",
-			description = "Uses advanced optics to form a 70m long beam." .. limit_string
+			description = "Uses advanced optics to form a 70m long beam." .. limit_string,
 			inventory_image = "light_tool_flashlight_gold.png",
 		})
 
@@ -169,7 +167,7 @@ if make_default_recipes then
 		end
 		minetest.register_tool("light_tool:flashlight_mese", {
 			short_description = "Super Flashlight",
-			description = "Collimates the light of an advanced light source to an 110m long beam." .. limit_string
+			description = "Collimates the light of an advanced light source to an 110m long beam." .. limit_string,
 			inventory_image = "light_tool_flashlight_mese.png",
 		})
 
@@ -191,7 +189,7 @@ if make_default_recipes then
 		end
 		minetest.register_tool("light_tool:flashlight_diamond", {
 			short_description = "Ultra Flashlight",
-			description = "Emits an 160m long beam of light. Useful for finding the light switch in your basement." .. limit_string
+			description = "Emits an 160m long beam of light. Useful for finding the light switch in your basement." .. limit_string,
 			inventory_image = "light_tool_flashlight_diamond.png",
 		})
 
@@ -233,7 +231,6 @@ elseif make_mcl_recipes then -- TODO Test these recipes in MineClone.
 			output = "light_tool:reflector_iron",
 			recipe = "light_tool:reflector_clay_iron",
 			cooktime = 15
-			}
 		})
 
 		local limit_string = ""
@@ -242,7 +239,7 @@ elseif make_mcl_recipes then -- TODO Test these recipes in MineClone.
 		end
 		minetest.register_tool("light_tool:flashlight_iron", {
 			short_description = "Mini Flashlight",
-			description = "Bundles the light of a light source to a 30m long beam." .. limit_string
+			description = "Bundles the light of a light source to a 30m long beam." .. limit_string,
 			inventory_image = "light_tool_flashlight_iron.png",
 		})
 
@@ -281,7 +278,6 @@ elseif make_mcl_recipes then -- TODO Test these recipes in MineClone.
 			output = "light_tool:reflector_gold",
 			recipe = "light_tool:reflector_iron_gold",
 			cooktime = 10
-			}
 		})
 
 		local limit_string = ""
@@ -290,7 +286,7 @@ elseif make_mcl_recipes then -- TODO Test these recipes in MineClone.
 		end
 		minetest.register_tool("light_tool:flashlight_gold", {
 			short_description = "Midi Flashlight",
-			description = "Uses advanced optics to form a 70m long beam." .. limit_string
+			description = "Uses advanced optics to form a 70m long beam." .. limit_string,
 			inventory_image = "light_tool_flashlight_gold.png",
 		})
 
@@ -311,7 +307,7 @@ elseif make_mcl_recipes then -- TODO Test these recipes in MineClone.
 		end
 		minetest.register_tool("light_tool:flashlight_diamond", {
 			short_description = "Maxi Flashlight",
-			description = "Emits an 160m long beam of light. Useful for finding the light switch in your basement." .. limit_string
+			description = "Emits an 160m long beam of light. Useful for finding the light switch in your basement." .. limit_string,
 			inventory_image = "light_tool_flashlight_diamond.png",
 		})
 
