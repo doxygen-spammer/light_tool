@@ -6,35 +6,62 @@ light_tool = {}
 light_tool.lightable_nodes = {}
 light_tool.lit_nodes = {}
 
+-- Places a temporary light source at <pos>.
+-- Pass check_only = true to not place a light source, but only check whether a beam can pass here.
+-- Returns whether the beam can pass here.
+light_tool.illuminate_node = function(pos, check_only)
+	local node = minetest.get_node(pos)
+
+	-- Illuminate air:
+	if node.name == "air" then
+		if not check_only then
+			minetest.set_node(pos, { name = "light_tool:light" })
+			minetest.get_node_timer(pos):start(0.2)
+		end
+		return true
+	elseif node.name == "light_tool:light" then
+		if not check_only then
+			minetest.get_node_timer(pos):start(0.2)
+		end
+		return true
+	end
+
+	-- Illuminate glow nodes:
+	local lightable = light_tool.check(light_tool.lightable_nodes, node.name)
+	local lightable_index = light_tool.check_index(light_tool.lightable_nodes, node.name)
+	local lit = light_tool.check(light_tool.lit_nodes, node.name)
+
+	if lightable or node.name == lit then
+		if not check_only then
+			minetest.set_node(pos, { name = light_tool.lightable_nodes[lightable_index] .. "_glowing" })
+		end
+		return true
+	end
+
+	-- Can not illuminate this node, check whether the beam can pass:
+	return minetest.registered_nodes[node.name].sunlight_propagates
+end
+
 -- Creates a beam of temporary light sources from <pos> to <pos + dir * range>, but blocked by obstacles.
+-- beam_density defines after how many nodes a light source shall be placed. Default: 1
+-- beam_offset defines after how many nodes the first light source shall be placed. Default: 0
+-- A light source is always placed on the point before an obstacle.
 -- Returns the last position where a light source was placed, or nil when no light source could be placed.
-light_tool.light_beam = function(pos, dir, range)
+light_tool.light_beam = function(pos, dir, range, beam_density, beam_offset)
 	local last_pos = nil
+	local density = beam_density or 1
+	local offset = beam_offset or 0
 
 	for i = 0, range do
         local new_pos = light_tool.directional_pos(pos, dir, i)
-		local node = minetest.get_node(new_pos)
-		
-		
-		local lightable = light_tool.check(light_tool.lightable_nodes, node.name)
-		local lightable_index = light_tool.check_index(light_tool.lightable_nodes, node.name)
-		local lit = light_tool.check(light_tool.lit_nodes, node.name)
 
-		if node.name == "air" then
-			-- Place temporary light nodes in air:
-			minetest.set_node(new_pos, {name = "light_tool:light"})
-			minetest.get_node_timer(new_pos):start(0.2)
+		local place_light_source = (i % density) == offset
+		local beam_passes = light_tool.illuminate_node(new_pos, not place_light_source)
+
+		if beam_passes then
 			last_pos = new_pos
-		elseif node.name == "light_tool:light" then
-			-- Reset destruction timer for this light node:
-			minetest.get_node_timer(new_pos):start(0.2)
-			last_pos = new_pos
-        elseif lightable or node.name == lit then
-	        
-	        local index = light_tool.check_index(light_tool.lightable_nodes, node.name)
-	        minetest.set_node(new_pos, {name = light_tool.lightable_nodes[index].."_glowing"})
-			last_pos = new_pos
-        elseif node.name and minetest.registered_nodes[node.name].sunlight_propagates == false and not lightable and not lit then
+		else
+			light_tool.illuminate_node(light_tool.directional_pos(pos, dir, i - 1))
 			break
 		end
      end
@@ -57,7 +84,7 @@ setmetatable(light_tool.divergence_table, {
 })
 
 light_tool.light_beam_with_divergence = function(pos, dir, range, divergence)
-	local beam_end = light_tool.light_beam(pos, dir, range)
+	local beam_end = light_tool.light_beam(pos, dir, range, (divergence > 0) and 5 or 1, 0)
 
 	if not beam_end then
 		return
@@ -84,8 +111,8 @@ light_tool.light_beam_with_divergence = function(pos, dir, range, divergence)
 
 	for i_ring = 1, beam_ring_count do
 		local radius = beam_ring_spacing * i_ring / range
-		for _, point in ipairs(light_tool.divergence_table[i_ring]) do
-			light_tool.light_beam(pos, vector.add(vector.add(normalized_dir, vector.multiply(horizontal_on_dir, radius * point.x)), vector.multiply(vertical_on_dir, radius * point.y)), range)
+		for i_point, point in ipairs(light_tool.divergence_table[i_ring]) do
+			light_tool.light_beam(pos, vector.add(vector.add(normalized_dir, vector.multiply(horizontal_on_dir, radius * point.x)), vector.multiply(vertical_on_dir, radius * point.y)), range, 5, (i_ring + i_point) % 5)
 		end
 	end
 end
