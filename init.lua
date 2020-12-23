@@ -2,12 +2,7 @@ local name = minetest.get_current_modname()
 local path = minetest.get_modpath(name)
 
 dofile(path.."/api.lua")
-
-minetest.register_tool("light_tool:light_tool", {
-	description = "Light Tool",
-	inventory_image = "light_tool_light_tool.png",
-})
-light_tool.add_tool("light_tool:light_tool", 20)
+dofile(path.."/tools.lua")
 
 -- This is a temporary light source which forms the light beam of a flashlight.
 -- When you constructed it, call minetest.get_node_timer(pos):start(lifetime) to make it delete itself.
@@ -40,29 +35,13 @@ if minetest.get_modpath("default") then
 	light_tool.register_glow_node("default:water_flowing")
 	light_tool.register_glow_node("default:river_water_source")
 	light_tool.register_glow_node("default:river_water_flowing")
-	
-	minetest.register_craft({
-		output = "light_tool:light_tool",
-		recipe = {
-			{"","default:mese_crystal_fragment","default:mese_crystal"},
-			{"default:mese_crystal_fragment","default:steel_ingot","default:mese_crystal_fragment"},
-			{"default:steel_ingot", "default:mese_crystal_fragment",""},
-		},
-	})
 elseif minetest.get_modpath("mcl_core") then
 	light_tool.register_glow_node("mcl_core:water_source")
 	light_tool.register_glow_node("mcl_core:water_flowing")
 	light_tool.register_glow_node("mclx_core:river_water_source")
 	light_tool.register_glow_node("mclx_core:river_water_flowing")
-	minetest.register_craft({
-		output = "light_tool:light_tool",
-		recipe = {
-			{"","mobs_mc:blaze_rod","mcl_nether:glowstone"},
-			{"mobs_mc:blaze_rod","mcl_core:steel_ingot","mobs_mc:blaze_rod"},
-			{"mcl_core:steel_ingot", "mobs_mc:blaze_rod",""},
-		},
-	})
 end
+
 minetest.register_globalstep(function()
 	for _, user in ipairs(minetest.get_connected_players()) do
 		local stack = ItemStack(user:get_wielded_item())
