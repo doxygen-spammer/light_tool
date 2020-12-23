@@ -52,8 +52,10 @@ light_tool.light_beam = function(pos, dir, range, beam_density, beam_offset)
 	local density = beam_density or 1
 	local offset = beam_offset or 0
 
+	local normalized_dir = vector.divide(dir, math.max(math.abs(dir.x), math.abs(dir.y), math.abs(dir.z), 0.01))
+
 	for i = 0, range do
-        local new_pos = light_tool.directional_pos(pos, dir, i)
+        local new_pos = vector.add(pos, vector.multiply(normalized_dir, i))
 
 		local place_light_source = (i % density) == offset
 		local beam_passes = light_tool.illuminate_node(new_pos, not place_light_source)
@@ -61,7 +63,7 @@ light_tool.light_beam = function(pos, dir, range, beam_density, beam_offset)
 		if beam_passes then
 			last_pos = new_pos
 		else
-			light_tool.illuminate_node(light_tool.directional_pos(pos, dir, i - 1))
+			light_tool.illuminate_node(vector.add(pos, vector.multiply(normalized_dir, i - 1)))
 			break
 		end
      end
