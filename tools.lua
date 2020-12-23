@@ -15,6 +15,9 @@ if setting_max_block_send_distance < setting_active_block_range + 1 then
 	max_range_limiting_string = "\n[Distance limited by max_block_send_distance setting.]"
 end
 
+-- Divergence for tools?
+local allow_divergence = minetest.settings:get("light_tool_divergent_tools")
+
 -- Original light_tool flashlight
 if tier == -1 then
 	minetest.register_tool("light_tool:light_tool", {
@@ -154,7 +157,7 @@ if make_default_recipes then
 				{"default:steel_ingot", "light_tool:reflector_gold", "default:steel_ingot"}
 			}
 		})
-		light_tool.add_tool("light_tool:flashlight_gold", math.min(max_range, 70), 9)
+		light_tool.add_tool("light_tool:flashlight_gold", math.min(max_range, 70), allow_divergence and 9 or nil)
 	end
 
 	if tier >= 4 then
@@ -175,7 +178,7 @@ if make_default_recipes then
 				{"default:steel_ingot", "light_tool:flashlight_gold", "default:steel_ingot"}
 			}
 		})
-		light_tool.add_tool("light_tool:flashlight_mese", math.min(max_range, 110), 10)
+		light_tool.add_tool("light_tool:flashlight_mese", math.min(max_range, 110), allow_divergence and 10 or nil)
 	end
 
 	if tier >= 5 then
@@ -196,7 +199,7 @@ if make_default_recipes then
 				{"light_tool:flashlight_mese", "default:diamond", "light_tool:flashlight_mese"}
 			}
 		})
-		light_tool.add_tool("light_tool:flashlight_diamond", math.min(max_range, 160), 14)
+		light_tool.add_tool("light_tool:flashlight_diamond", math.min(max_range, 160), allow_divergence and 14 or nil)
 	end
 
 elseif make_mcl_recipes then
@@ -286,7 +289,7 @@ elseif make_mcl_recipes then
 				{"mcl_core:iron_ingot", "light_tool:reflector_gold", "mcl_core:iron_ingot"}
 			}
 		})
-		light_tool.add_tool("light_tool:flashlight_gold", math.min(max_range, 70), 10)
+		light_tool.add_tool("light_tool:flashlight_gold", math.min(max_range, 70), allow_divergence and 10 or nil)
 	end
 
 	if tier >= 5 then
@@ -307,6 +310,6 @@ elseif make_mcl_recipes then
 				{"light_tool:flashlight_gold", "mcl_core:diamond", "light_tool:flashlight_gold"}
 			}
 		})
-		light_tool.add_tool("light_tool:flashlight_diamond", math.min(max_range, 160), 14)
+		light_tool.add_tool("light_tool:flashlight_diamond", math.min(max_range, 160), allow_divergence and 14 or nil)
 	end
 end

@@ -7,3 +7,8 @@
 # 4 Mese (110m)
 # 5 Diamond (160m)
 light_tool_max_tier (Max Flashlight Tier) int -1 -1 5
+
+# Whether builtin flashlight tools have divergent beams,
+# i. e. beams that get wider over distance.
+# This may cause a significant performance penalty.
+light_tool_divergent_tools (Flashlights have divergent Beams) bool false
