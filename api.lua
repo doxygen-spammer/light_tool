@@ -3,8 +3,6 @@
 -- also you can use  light_tool.register_glow_node(name) to make it so the beam travels through that block (e.g. To make it work underwater)
 
 light_tool = {}
-light_tool.tools = {}
-light_tool.range = {}
 light_tool.lightable_nodes = {}
 light_tool.lit_nodes = {}
 light_tool.light_beam = function(pos, dir, range)
@@ -35,9 +33,11 @@ light_tool.light_beam = function(pos, dir, range)
      end
 end
 
+-- Format: tools["tool_name"] = { range = int }
+light_tool.tools = {}
+
 light_tool.add_tool = function(toolname, range)
-	table.insert(light_tool.tools, toolname)
-	table.insert(light_tool.range, range)
+	light_tool.tools[toolname] = { ["range"] = range }
 end
 
 light_tool.register_glow_node = function(name)

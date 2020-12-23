@@ -46,11 +46,10 @@ minetest.register_globalstep(function()
 	for _, user in ipairs(minetest.get_connected_players()) do
 		local stack = ItemStack(user:get_wielded_item())
 		local wielded = stack:get_definition()
-		if light_tool.check(light_tool.tools, wielded.name) then
-			local index = light_tool.check_index(light_tool.tools, wielded.name)
+		if light_tool.tools[wielded.name] then
 			local dir = user:get_look_dir()
 			local pos = user:get_pos()
-			light_tool.light_beam({x = pos.x, y = pos.y+1, z = pos.z}, dir, light_tool.range[index])
+			light_tool.light_beam({x = pos.x, y = pos.y+1, z = pos.z}, dir, light_tool.tools[wielded.name].range)
 		end
 	end
 end)
