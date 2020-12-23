@@ -154,7 +154,7 @@ if make_default_recipes then
 				{"default:steel_ingot", "light_tool:reflector_gold", "default:steel_ingot"}
 			}
 		})
-		light_tool.add_tool("light_tool:flashlight_gold", math.min(max_range, 70))
+		light_tool.add_tool("light_tool:flashlight_gold", math.min(max_range, 70), 9)
 	end
 
 	if tier >= 4 then
@@ -175,7 +175,7 @@ if make_default_recipes then
 				{"default:steel_ingot", "light_tool:flashlight_gold", "default:steel_ingot"}
 			}
 		})
-		light_tool.add_tool("light_tool:flashlight_mese", math.min(max_range, 110))
+		light_tool.add_tool("light_tool:flashlight_mese", math.min(max_range, 110), 10)
 	end
 
 	if tier >= 5 then
@@ -196,7 +196,7 @@ if make_default_recipes then
 				{"light_tool:flashlight_mese", "default:diamond", "light_tool:flashlight_mese"}
 			}
 		})
-		light_tool.add_tool("light_tool:flashlight_diamond", math.min(max_range, 160))
+		light_tool.add_tool("light_tool:flashlight_diamond", math.min(max_range, 160), 14)
 	end
 
 elseif make_mcl_recipes then
@@ -286,7 +286,7 @@ elseif make_mcl_recipes then
 				{"mcl_core:iron_ingot", "light_tool:reflector_gold", "mcl_core:iron_ingot"}
 			}
 		})
-		light_tool.add_tool("light_tool:flashlight_gold", math.min(max_range, 70))
+		light_tool.add_tool("light_tool:flashlight_gold", math.min(max_range, 70), 10)
 	end
 
 	if tier >= 5 then
@@ -307,6 +307,6 @@ elseif make_mcl_recipes then
 				{"light_tool:flashlight_gold", "mcl_core:diamond", "light_tool:flashlight_gold"}
 			}
 		})
-		light_tool.add_tool("light_tool:flashlight_diamond", math.min(max_range, 160))
+		light_tool.add_tool("light_tool:flashlight_diamond", math.min(max_range, 160), 14)
 	end
 end

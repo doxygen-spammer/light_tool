@@ -49,7 +49,7 @@ minetest.register_globalstep(function()
 		if light_tool.tools[wielded.name] then
 			local dir = user:get_look_dir()
 			local pos = user:get_pos()
-			light_tool.light_beam({x = pos.x, y = pos.y+1, z = pos.z}, dir, light_tool.tools[wielded.name].range)
+			light_tool.light_beam_with_divergence({x = pos.x, y = pos.y+1, z = pos.z}, dir, light_tool.tools[wielded.name].range, light_tool.tools[wielded.name].divergence)
 		end
 	end
 end)
